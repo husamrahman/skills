@@ -1,0 +1,4 @@
+interface:
+  display_name: "End Session"
+  short_description: "Capture the session's learnings to your vault, then open a PR."
+  default_prompt: "Wrap up: capture what I did, learned, and the gotchas into my vault, then commit, push, and open a PR."
