@@ -109,9 +109,10 @@ decisions, gotchas, evals, next steps, and a handoff. You do not write these by 
 ```markdown
 # Evals
 
-end-session writes one note here per non-obvious learning, each with a testable
-"Eval criteria" line. start-session surfaces the relevant ones before a task, so
-the same mistake does not happen twice. You do not write these by hand.
+end-session writes a note here for each durable, cross-project learning worth
+resurfacing, each with a testable "Eval criteria" line. start-session surfaces
+the relevant ones before a task, so the same mistake does not happen twice. You
+do not write these by hand.
 ```
 
 ### 3. Record where the vault lives (so the session skills can find it)

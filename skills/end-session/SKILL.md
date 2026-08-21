@@ -82,11 +82,15 @@ outcome: <shipped | pr-created | ongoing | discarded>
 <anything the next session needs to know immediately to pick this up>
 ```
 
-Figure out the Gotchas and Evals yourself - do not ask the user. Review the session for problems that took several attempts, approaches that failed first, non-obvious behavior, patterns worth repeating, and corrections the user made. Only capture the non-obvious ones; if a routine session taught nothing new, leave those sections empty rather than forcing them. For each eval, the "Eval criteria" line is the point - make it a concrete, testable statement, not a vibe.
+Figure out the Gotchas and Evals yourself - do not ask the user. Review the session for problems that took several attempts, approaches that failed first, non-obvious behavior, patterns worth repeating, and corrections the user made. Only capture the non-obvious ones; if a routine session taught nothing new, leave those sections empty rather than forcing them.
 
-### 5. Promote each eval to its own note
+Keep each eval atomic: one lesson, one criterion. If you are checking three things, that is three evals, not one. Write the "Eval criteria" as a binary, observable check - "given X, expect Y" - never a 1-5 scale or a vibe like "handles errors well". Binary is what makes it checkable later.
 
-For every non-obvious learning worth keeping, write a standalone eval to `<vault>/evals/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. This is the durable artifact a future `start-session` surfaces before the same mistake can recur.
+### 5. Promote only the durable evals to their own note
+
+The `## Evals` section above is the full record - every eval for this session already lives there inline. Do not create a file for each one, or the `evals/` folder becomes noise. Promote to a standalone note only the few that are durable and cross-session: the ones you will almost certainly hit again on a later session. Most sessions promote zero or one, and that is correct. If an existing eval already covers it, update that file instead of adding a near-duplicate.
+
+For each one you promote, write `<vault>/evals/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. It is the durable artifact a future `start-session` surfaces before the same mistake can recur.
 
 ```markdown
 ---
@@ -117,7 +121,7 @@ severity: <low | medium | high>
 <project-specific or global? when should a future session watch for this?>
 ```
 
-Rules: only write evals for non-obvious things. If nothing was learned, write nothing; do not force it. The "Eval criteria" line is a testable statement, not a summary.
+Rules: keep each eval atomic (one lesson, one binary criterion). If nothing durable was learned, promote nothing - the inline section is enough.
 
 ### 6. Promote reusable gotchas
 
