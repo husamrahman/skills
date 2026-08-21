@@ -46,14 +46,15 @@ Keep startup context minimal. Your project's config (CLAUDE.md / AGENTS.md) alre
 
 #### Read the project note (the only required read)
 
-Look in the vault's `projects/` folder for a note whose name matches the project, and read it in full - status, active work, gotchas, architecture.
+Each project has its **own folder** under `projects/`, named after the repo. Find the folder that matches this project and read its `README.md` in full - status, active work, gotchas, architecture. Skim any other notes in the folder if relevant.
 
 ```bash
 # ripgrep/grep is handy but optional; your own file-search tools work just as well
-ls "$VAULT/projects/" | grep -i "$PROJECT"
+ls "$VAULT/projects/" | grep -i "$PROJECT"          # a folder, e.g. acme-api/
+# then read "$VAULT/projects/<match>/README.md"
 ```
 
-If nothing matches, that is fine - it is a new project. Note it and move on.
+If no folder matches, that is fine - it is a new project. Note it and move on (end-session will create `projects/<project>/` by copying `projects/_template/`).
 
 #### Surface prior gotchas and the last handoff
 

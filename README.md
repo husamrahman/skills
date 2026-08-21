@@ -62,7 +62,20 @@ Codex reads `SKILL.md` for the workflow and `agents/openai.yaml` for how to surf
 2. The `~/.agent-vault` pointer file.
 3. The `~/vault` default.
 
-A plain pointer file is used on purpose instead of an environment variable or a symlink: it works identically on Windows, macOS, and Linux, needs no admin rights or shell-profile edits, and survives being copied between machines.
+A plain pointer file is used on purpose instead of an environment variable or a symlink: it works identically on Windows, macOS, and Linux, needs no admin rights or shell-profile edits, and survives being copied between machines. `setup-vault` ships both a bash and a **PowerShell** one-shot block, so Windows users are first-class.
+
+## The vault layout
+
+```text
+<vault>/
+  projects/     one FOLDER per project (named after the repo); its note is README.md
+    _template/  copy this to start a new project
+  knowledge/    cross-project lessons and gotchas
+  sessions/     a dated log per work session      (template: sessions/_template.md)
+  evals/        durable learnings with a testable check   (template: evals/_template.md)
+```
+
+The templates live in the vault, so they are easy to find and edit. `end-session` fills in `sessions/_template.md` and `evals/_template.md`; `start-session` only reads (its one template is the ready-summary it prints).
 
 ## How a skill is structured
 

@@ -8,27 +8,33 @@ echo "setup-vault"
 make_sandbox
 
 BLOCK="$SANDBOX/setup-vault-block.sh"
-extract_bash_block "$SKILLS_DIR/setup-vault/SKILL.md" "POSIX one-liner" 1 > "$BLOCK"
-assert_ok "SKILL.md ships a runnable POSIX block" -- test -s "$BLOCK"
+extract_bash_block "$SKILLS_DIR/setup-vault/SKILL.md" "one-shot setup" 1 > "$BLOCK"
+assert_ok "SKILL.md ships a runnable bash block" -- test -s "$BLOCK"
 
 # Run it exactly as a user on a bare machine would.
 ( cd "$HOME" && bash "$BLOCK" ) >/dev/null 2>&1
 
 VAULT="$(resolve_vault)"
 assert_eq "$VAULT" "$HOME/vault" "vault resolves to the default ~/vault"
-assert_dir  "$VAULT/projects"           "projects/ created"
-assert_dir  "$VAULT/knowledge"          "knowledge/ created"
-assert_dir  "$VAULT/sessions"           "sessions/ created"
-assert_dir  "$VAULT/evals"              "evals/ created"
-assert_file "$VAULT/projects/_template.md" "project template seeded"
-assert_file "$HOME/.agent-vault"        "pointer file written"
+assert_dir  "$VAULT/projects"                    "projects/ created"
+assert_dir  "$VAULT/knowledge"                   "knowledge/ created"
+assert_dir  "$VAULT/sessions"                    "sessions/ created"
+assert_dir  "$VAULT/evals"                       "evals/ created"
+# each project is a folder: the template is a folder with a README note
+assert_dir  "$VAULT/projects/_template"          "project template is a FOLDER"
+assert_file "$VAULT/projects/_template/README.md" "project template note seeded"
+# session + eval templates live in the vault, discoverable
+assert_file "$VAULT/sessions/_template.md"       "session template seeded"
+assert_file "$VAULT/evals/_template.md"          "eval template seeded"
+assert_file "$HOME/.agent-vault"                 "pointer file written"
 assert_eq "$(cat "$HOME/.agent-vault")" "$VAULT" "pointer points at the vault"
 
 # Idempotency: a real note must survive a re-run.
-printf 'DO NOT CLOBBER\n' > "$VAULT/projects/acme-api.md"
+mkdir -p "$VAULT/projects/acme-api"
+printf 'DO NOT CLOBBER\n' > "$VAULT/projects/acme-api/README.md"
 printf '# custom readme\n' > "$VAULT/README.md"
 ( cd "$HOME" && bash "$BLOCK" ) >/dev/null 2>&1
-assert_contains "$VAULT/projects/acme-api.md" "DO NOT CLOBBER" "re-run preserves user's project note"
+assert_contains "$VAULT/projects/acme-api/README.md" "DO NOT CLOBBER" "re-run preserves user's project note"
 assert_contains "$VAULT/README.md" "custom readme" "re-run preserves an edited README"
 
 finish

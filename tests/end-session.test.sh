@@ -21,14 +21,14 @@ assert_contains "$SKILL" "Eval criteria"   "eval note carries a testable Eval cr
 assert_not_contains "$SKILL" "qmd" "no qmd re-index step remains"
 assert_not_contains "$SKILL" "07-logs" "no legacy folder scheme remains"
 
-# --- gotcha promotion appends, never overwrites ---
-VAULT="$HOME/vault"; mkdir -p "$VAULT/projects"
-printf '# acme-api\n\n## Gotchas\n- existing one\n' > "$VAULT/projects/acme-api.md"
-before="$(grep -c '^- ' "$VAULT/projects/acme-api.md")"
-printf -- '- [2026-08-21] **limiter order**: auth must precede limiter. _Trigger: middleware edits_\n' \
-  >> "$VAULT/projects/acme-api.md"
-after="$(grep -c '^- ' "$VAULT/projects/acme-api.md")"
-assert_contains "$VAULT/projects/acme-api.md" "existing one" "existing gotcha preserved"
+# --- gotcha promotion appends to the project folder's README, never overwrites ---
+VAULT="$HOME/vault"; mkdir -p "$VAULT/projects/acme-api"
+NOTE="$VAULT/projects/acme-api/README.md"
+printf '# acme-api\n\n## Gotchas\n- existing one\n' > "$NOTE"
+before="$(grep -c '^- ' "$NOTE")"
+printf -- '- [2026-08-21] **limiter order**: auth must precede limiter. _Trigger: middleware edits_\n' >> "$NOTE"
+after="$(grep -c '^- ' "$NOTE")"
+assert_contains "$NOTE" "existing one" "existing gotcha preserved"
 assert_ok "promotion appends a new gotcha line" -- test "$after" -eq $((before + 1))
 
 # --- worktree can be retired ---

@@ -17,17 +17,18 @@ printf '%s\n' "$HOME/vault" > "$HOME/.agent-vault"
 
 # --- seed a vault the way setup-vault + prior sessions would ---
 VAULT="$(resolve_vault)"
-mkdir -p "$VAULT/projects" "$VAULT/knowledge" "$VAULT/sessions"
-printf '# acme-api\n## Gotchas\n- auth before limiter\n' > "$VAULT/projects/acme-api.md"
+mkdir -p "$VAULT/projects/acme-api" "$VAULT/knowledge" "$VAULT/sessions"
+printf '# acme-api\n## Gotchas\n- auth before limiter\n' > "$VAULT/projects/acme-api/README.md"
 printf 'acme-api gotcha: middleware order matters\n'       > "$VAULT/knowledge/mw.md"
 printf '## Handoff\nOLD handoff\n'  > "$VAULT/sessions/acme-api-2026-08-10-090000.md"
 printf '## Handoff\nNEW handoff\n'  > "$VAULT/sessions/acme-api-2026-08-20-090000.md"
 
 PROJECT="acme-api"
 
-# project note lookup (excludes _template/_README)
-note="$(printf '%s\n' "$VAULT"/projects/*.md | tr ' ' '\n' | grep -i "$PROJECT" | grep -v '/_' | head -1)"
-assert_eq "$(basename "$note")" "acme-api.md" "locates the project note by name"
+# project note lookup: each project is its own folder; note is its README.md
+proj_dir="$(printf '%s\n' "$VAULT"/projects/*/ | tr ' ' '\n' | grep -i "$PROJECT" | grep -v '/_' | head -1)"
+assert_eq "$(basename "$proj_dir")" "acme-api" "locates the project folder by name"
+assert_file "${proj_dir}README.md" "project note is the folder's README.md"
 
 # gotcha search must work with plain grep (no ripgrep, no index)
 hits="$(grep -rl -i "gotcha" "$VAULT" | grep -ci "$PROJECT")"

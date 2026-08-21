@@ -47,7 +47,7 @@ pkill -f "$SESSION_DIR.*nodemon"   2>/dev/null || true
 
 ### 4. Write the session log
 
-Save to `<vault>/sessions/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. Facts, not narrative. Only list files that matter. Fill in every section you have something for; drop a section entirely if it is genuinely empty rather than padding it.
+Save to `<vault>/sessions/<project>-<YYYY-MM-DD>-<HHMMSS>.md`, following the template in `<vault>/sessions/_template.md` (shown below). Facts, not narrative. Only list files that matter. Fill in every section you have something for; drop a section entirely if it is genuinely empty rather than padding it.
 
 ```markdown
 ---
@@ -90,7 +90,7 @@ Keep each eval atomic: one lesson, one criterion. If you are checking three thin
 
 The `## Evals` section above is the full record - every eval for this session already lives there inline. Do not create a file for each one, or the `evals/` folder becomes noise. Promote to a standalone note only the few that are durable and cross-session: the ones you will almost certainly hit again on a later session. Most sessions promote zero or one, and that is correct. If an existing eval already covers it, update that file instead of adding a near-duplicate.
 
-For each one you promote, write `<vault>/evals/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. It is the durable artifact a future `start-session` surfaces before the same mistake can recur.
+For each one you promote, write `<vault>/evals/<project>-<YYYY-MM-DD>-<HHMMSS>.md`, following `<vault>/evals/_template.md` (shown below). It is the durable artifact a future `start-session` surfaces before the same mistake can recur.
 
 ```markdown
 ---
@@ -111,11 +111,8 @@ severity: <low | medium | high>
 ## Actual
 <what actually happened: the wrong approach, the error, the friction>
 
-## Resolution
-<how it was fixed / what the right answer turned out to be>
-
 ## Eval criteria
-<a concrete, testable check that a future session has learned this>
+<a binary, observable check that proves a future session learned this>
 
 ## Applies to
 <project-specific or global? when should a future session watch for this?>
@@ -127,7 +124,7 @@ Rules: keep each eval atomic (one lesson, one binary criterion). If nothing dura
 
 So a future `start-session` resurfaces them:
 
-- **Project-specific** gotcha -> append to the project note in `<vault>/projects/<project>.md`:
+- **Project-specific** gotcha -> append to the project note at `<vault>/projects/<project>/README.md`. If that project folder does not exist yet, create it by copying `<vault>/projects/_template/`, then fill in the note:
   ```markdown
   ### Gotchas
   - [DATE] **<issue>**: <what happened and the fix>. _Trigger: <when this applies>_

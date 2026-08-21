@@ -37,7 +37,7 @@ Or say "wrap up and capture what we learned."
 1. Identifies the session type, reviews the diff, and stops anything the session started.
 2. Writes a structured session log to `<vault>/sessions/` with these sections: **Session summary, Changes, Decisions, Gotchas, Evals, Next steps, Handoff**.
 3. Captures each non-obvious learning as an eval (one lesson, one binary **Eval criteria**) inline in the session note, and promotes only the durable, cross-session ones to their own file under `<vault>/evals/` - so `evals/` stays a curated set, not a dumping ground.
-4. Promotes reusable gotchas into the project note (`projects/`) or, if global, into `knowledge/`.
+4. Promotes reusable gotchas into the project note (`projects/<project>/README.md`, created from `projects/_template/` if new) or, if global, into `knowledge/`.
 5. Commits, pushes, and opens a PR (never merges on its own), then retires the worktree.
 
 ## Example

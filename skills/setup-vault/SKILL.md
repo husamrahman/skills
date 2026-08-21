@@ -1,69 +1,74 @@
 ---
 name: setup-vault
-description: Create a knowledge vault - a plain folder of markdown files on your computer - that the start-session and end-session skills read from and write to, and record where it lives so those skills can find it on any OS. Use when the user says setup-vault, /setup-vault, "set up my vault", "create a vault", or is starting out and has no vault yet. No Obsidian required.
+description: Create a knowledge vault - a plain folder of markdown files on your computer - that the start-session and end-session skills read from and write to, and record where it lives so those skills can find it on any OS. Use when the user says setup-vault, /setup-vault, "set up my knowledge vault", "create a vault", or is starting out and has no vault yet. No Obsidian required.
 ---
 
-# Setup Vault
+# Setup Knowledge Vault
 
-Create the folder your session skills use as memory, and drop a small pointer so those skills can find it later on any machine. A "vault" is nothing fancy: just a folder of markdown (`.md`) text files. Open any of them in any editor. Obsidian is a nice free app for browsing and linking these notes, but it is optional and nothing here needs it.
+Create the **knowledge vault** your session skills use as memory, and drop a small pointer so those skills can find it later on any machine. A knowledge vault is nothing fancy: just a folder of markdown (`.md`) text files. Open any of them in any editor. Obsidian is a nice free app for browsing and linking these notes, but it is optional and nothing here needs it.
 
 Run this once, before your first `start-session`.
 
-## Process
+## First, know the operating system
 
-Do these steps with your own file tools so this works identically on Windows, macOS, and Linux. A POSIX one-liner is offered at the end for shells that have it, but the file-tool path is the reliable one.
+The commands differ by OS, so determine which one you are on before running anything:
 
-### 1. Pick the vault location
+- **Windows** - use the PowerShell block. Many users are here; do not assume a POSIX shell.
+- **macOS / Linux / WSL / Git Bash** - use the bash block, or the file-tool steps.
 
-Default is a folder named `vault` in the user's home directory (`~/vault`). Keep the default unless the user wants it elsewhere (for example inside OneDrive, iCloud, or Dropbox so it syncs across machines). Resolve `~`/home yourself; do not rely on a shell variable being set.
+If unsure, check: PowerShell has `$PSVersionTable`; a POSIX shell has `$SHELL`.
 
-### 2. Create the folders and seed files
-
-Create this structure. Only create files that do not already exist — never overwrite a note the user already has.
+## The layout
 
 ```text
 <vault>/
   README.md
-  projects/          one note per project (start-session reads these)
+  projects/            one FOLDER per project (start-session reads these)
     _README.md
-    _template.md
-  knowledge/         lessons and gotchas that apply across projects
+    _template/         copy this folder to start a new project
+      README.md        the project note (status, build, gotchas, decisions)
+  knowledge/           cross-project lessons and gotchas
     _README.md
-  sessions/          one log per work session (end-session writes these)
+  sessions/            one log per work session (end-session writes these)
     _README.md
-  evals/             one note per eval - a lesson with a testable criterion
+    _template.md       the session-log template
+  evals/               durable, cross-session learnings with a testable check
     _README.md
+    _template.md       the eval-note template
 ```
 
-Seed each file with this content:
+Each project gets its **own folder** under `projects/`, named after the repo (a repo called `acme-api` -> `projects/acme-api/`). Its note is that folder's `README.md`; keep related per-project notes in the same folder. The `sessions/` and `evals/` templates live in the vault too, so they are easy to find and edit - that is where end-session's shapes come from.
+
+## Option A: create it with your file tools (works on any OS)
+
+Create the folders and files above with your own file tools. Only create files that do not already exist - never overwrite a note the user already has. Seed each with the content below, then write the pointer file (step at the end).
 
 `<vault>/README.md`
 ```markdown
-# My Vault
+# My Knowledge Vault
 
-A knowledge vault: a plain folder of markdown (.md) files my coding agent uses as
-long-term memory. Nothing here is special - open any file in any text editor.
+A plain folder of markdown (.md) files my coding agent uses as long-term memory.
+Nothing here is special - open any file in any text editor.
 
-- projects/    one note per project (status, how it works, gotchas)
+- projects/    one folder per project (status, how it works, gotchas)
 - knowledge/   lessons that apply across every project
 - sessions/    a dated log for each work session
-- evals/       one note per eval: a learning plus a testable check
+- evals/       durable learnings, each with a testable check
 
 start-session reads from these folders; end-session writes to them.
-Optional: open this folder in Obsidian (https://obsidian.md) to browse and link
-notes visually. Not required.
+Optional: open this folder in Obsidian (https://obsidian.md). Not required.
 ```
 
 `<vault>/projects/_README.md`
 ```markdown
 # Projects
 
-One note per project you work on. Name the file after the project's repo folder
-so start-session can find it (for a repo called acme-api, use acme-api.md).
-Copy _template.md to start a new one.
+One FOLDER per project, named after the repo folder so start-session can find it
+(for a repo called acme-api, use projects/acme-api/). The project note is that
+folder's README.md. Copy the _template folder to start a new project.
 ```
 
-`<vault>/projects/_template.md`
+`<vault>/projects/_template/README.md`
 ```markdown
 ---
 project: <repo-name>
@@ -101,69 +106,107 @@ on any project.
 ```markdown
 # Session logs
 
-end-session writes one dated note here per work session: a summary, what changed,
-decisions, gotchas, evals, next steps, and a handoff. You do not write these by hand.
+end-session writes one dated note here per work session, following _template.md:
+a summary, what changed, decisions, gotchas, evals, next steps, and a handoff.
+You do not write these by hand.
+```
+
+`<vault>/sessions/_template.md`
+```markdown
+---
+project: <project>
+date: <YYYY-MM-DD>
+type: <feature | fix | chore | research | planning>
+outcome: <shipped | pr-created | ongoing | discarded>
+---
+
+# <project> - <one-line summary of what was done>
+
+## Session summary
+<2-3 sentences: the goal and what was accomplished>
+
+## Changes
+- `path/to/file` - <what changed and why>
+
+## Decisions
+- <choice made and why, not the alternative>
+
+## Gotchas
+- <something that bit you and how to avoid it. Trigger: when this applies.>
+
+## Evals
+- <the learning in one line. Eval criteria: a binary, observable check.>
+
+## Next steps
+- [ ] <what comes next>
+
+## Handoff
+<anything the next session needs to know immediately>
 ```
 
 `<vault>/evals/_README.md`
 ```markdown
 # Evals
 
-end-session writes a note here for each durable, cross-project learning worth
-resurfacing, each with a testable "Eval criteria" line. start-session surfaces
-the relevant ones before a task, so the same mistake does not happen twice. You
-do not write these by hand.
+end-session promotes a note here for each durable, cross-session learning worth
+resurfacing, following _template.md - each with a testable "Eval criteria" line.
+start-session surfaces the relevant ones before a task. You do not write these
+by hand.
 ```
 
-### 3. Record where the vault lives (so the session skills can find it)
-
-Write the vault's **absolute path** into a pointer file in the user's home directory named `.agent-vault`. One line, just the path, no quotes:
-
-```text
-~/.agent-vault      ->  contents: /absolute/path/to/vault
-```
-
-This is how `start-session` and `end-session` locate the vault on the next run. A plain pointer file is used on purpose instead of an environment variable or a symlink, because it works the same on Windows, macOS, and Linux, needs no admin rights or shell-profile edits, and survives being copied or zipped between machines.
-
-If the user set a custom `VAULT` environment variable and prefers that, that is fine too - the session skills check `VAULT` first and fall back to this pointer file. But always write the pointer file so a plain machine with no env var still works.
-
-### 4. Confirm
-
-List the layout and tell the user they are ready:
-
+`<vault>/evals/_template.md`
 ```markdown
-## Vault ready
-- Location: <vault>
-- Recorded in: ~/.agent-vault
-- Folders: projects, knowledge, sessions, evals
-- Next: run start-session in a project, then end-session when you finish.
-  The vault fills itself in from there.
+---
+project: <project>
+date: <YYYY-MM-DD>
+category: <gotcha | pattern | correction | tool-discovery | architecture>
+severity: <low | medium | high>
+---
+
+# <short title of the learning>
+
+## Scenario
+<the task, and what was attempted>
+
+## Expected
+<what should have happened / the correct approach>
+
+## Actual
+<what actually happened: the wrong approach, the error, the friction>
+
+## Eval criteria
+<a binary, observable check that proves a future session learned this>
+
+## Applies to
+<project-specific or global? when should a future session watch for this?>
 ```
 
-## POSIX one-liner (optional convenience)
+## Option B: one-shot setup (pick your shell)
 
-On macOS, Linux, WSL, or Git Bash you can do steps 2-3 in one shell block instead of the file tools above. It is safe to re-run and will not overwrite existing files.
+Both blocks are safe to re-run and will not overwrite files you already have. They create the layout above and write the pointer file.
+
+### macOS / Linux / WSL / Git Bash (bash)
 
 ```bash
 set -e
 VAULT="${VAULT:-$HOME/vault}"
-mkdir -p "$VAULT/projects" "$VAULT/knowledge" "$VAULT/sessions" "$VAULT/evals"
+mkdir -p "$VAULT/projects/_template" "$VAULT/knowledge" "$VAULT/sessions" "$VAULT/evals"
 seed() { [ -e "$1" ] || cat > "$1"; }
 
 seed "$VAULT/README.md" <<'EOF'
-# My Vault
+# My Knowledge Vault
 A plain folder of markdown files my coding agent uses as long-term memory.
-- projects/  one note per project
+- projects/  one folder per project
 - knowledge/ cross-project lessons and gotchas
 - sessions/  a dated log per work session
-- evals/     one note per learning, each with a testable check
+- evals/     durable learnings, each with a testable check
 EOF
 seed "$VAULT/projects/_README.md" <<'EOF'
 # Projects
-One note per project. Name it after the repo folder (acme-api -> acme-api.md).
-Copy _template.md to start a new one.
+One FOLDER per project, named after the repo (acme-api -> projects/acme-api/).
+The project note is that folder's README.md. Copy _template/ to start a new one.
 EOF
-seed "$VAULT/projects/_template.md" <<'EOF'
+seed "$VAULT/projects/_template/README.md" <<'EOF'
 ---
 project: <repo-name>
 status: active
@@ -181,20 +224,158 @@ Cross-project lessons and gotchas. end-session writes global lessons here.
 EOF
 seed "$VAULT/sessions/_README.md" <<'EOF'
 # Session logs
-end-session writes one dated note per session. You do not write these by hand.
+end-session writes one dated note per session, following _template.md.
+EOF
+seed "$VAULT/sessions/_template.md" <<'EOF'
+---
+project: <project>
+date: <YYYY-MM-DD>
+type: <feature | fix | chore | research | planning>
+outcome: <shipped | pr-created | ongoing | discarded>
+---
+# <project> - <one-line summary>
+## Session summary
+## Changes
+## Decisions
+## Gotchas
+## Evals
+## Next steps
+## Handoff
 EOF
 seed "$VAULT/evals/_README.md" <<'EOF'
 # Evals
-end-session writes one note per non-obvious learning, each with a testable
-"Eval criteria" line. start-session surfaces the relevant ones next time.
+Durable, cross-session learnings, each with a testable Eval criteria line.
+Follow _template.md.
+EOF
+seed "$VAULT/evals/_template.md" <<'EOF'
+---
+project: <project>
+date: <YYYY-MM-DD>
+category: <gotcha | pattern | correction | tool-discovery | architecture>
+severity: <low | medium | high>
+---
+# <short title>
+## Scenario
+## Expected
+## Actual
+## Eval criteria
+## Applies to
 EOF
 
 printf '%s\n' "$VAULT" > "$HOME/.agent-vault"
-echo "Vault ready at $VAULT (recorded in ~/.agent-vault)"
+echo "Knowledge vault ready at $VAULT (recorded in ~/.agent-vault)"
+```
+
+### Windows (PowerShell)
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$Vault = if ($env:VAULT) { $env:VAULT } else { Join-Path $HOME 'vault' }
+foreach ($d in 'projects\_template','knowledge','sessions','evals') {
+  New-Item -ItemType Directory -Force -Path (Join-Path $Vault $d) | Out-Null
+}
+function Seed($Path, $Text) {
+  if (-not (Test-Path -LiteralPath $Path)) { Set-Content -LiteralPath $Path -Value $Text -Encoding utf8 }
+}
+
+Seed (Join-Path $Vault 'README.md') @'
+# My Knowledge Vault
+A plain folder of markdown files my coding agent uses as long-term memory.
+- projects/  one folder per project
+- knowledge/ cross-project lessons and gotchas
+- sessions/  a dated log per work session
+- evals/     durable learnings, each with a testable check
+'@
+Seed (Join-Path $Vault 'projects\_README.md') @'
+# Projects
+One FOLDER per project, named after the repo (acme-api -> projects\acme-api\).
+The project note is that folder's README.md. Copy _template\ to start a new one.
+'@
+Seed (Join-Path $Vault 'projects\_template\README.md') @'
+---
+project: <repo-name>
+status: active
+---
+# <Project>
+## What it is
+## How it is built
+## Gotchas
+## Decisions
+## Active work / next
+'@
+Seed (Join-Path $Vault 'knowledge\_README.md') @'
+# Knowledge
+Cross-project lessons and gotchas. end-session writes global lessons here.
+'@
+Seed (Join-Path $Vault 'sessions\_README.md') @'
+# Session logs
+end-session writes one dated note per session, following _template.md.
+'@
+Seed (Join-Path $Vault 'sessions\_template.md') @'
+---
+project: <project>
+date: <YYYY-MM-DD>
+type: <feature | fix | chore | research | planning>
+outcome: <shipped | pr-created | ongoing | discarded>
+---
+# <project> - <one-line summary>
+## Session summary
+## Changes
+## Decisions
+## Gotchas
+## Evals
+## Next steps
+## Handoff
+'@
+Seed (Join-Path $Vault 'evals\_README.md') @'
+# Evals
+Durable, cross-session learnings, each with a testable Eval criteria line.
+Follow _template.md.
+'@
+Seed (Join-Path $Vault 'evals\_template.md') @'
+---
+project: <project>
+date: <YYYY-MM-DD>
+category: <gotcha | pattern | correction | tool-discovery | architecture>
+severity: <low | medium | high>
+---
+# <short title>
+## Scenario
+## Expected
+## Actual
+## Eval criteria
+## Applies to
+'@
+
+Set-Content -LiteralPath (Join-Path $HOME '.agent-vault') -Value $Vault -Encoding utf8
+Write-Host "Knowledge vault ready at $Vault (recorded in ~/.agent-vault)"
+```
+
+## Record where the vault lives (so the session skills can find it)
+
+Both blocks above already do this: they write the vault's **absolute path** into a pointer file in the user's home directory named `.agent-vault` (one line, just the path). If you set the vault up by hand (Option A), write that file yourself.
+
+```text
+~/.agent-vault      ->  contents: /absolute/path/to/vault
+```
+
+This is how `start-session` and `end-session` locate the vault on the next run. A plain pointer file is used on purpose instead of an environment variable or a symlink, because it works the same on Windows, macOS, and Linux, needs no admin rights or shell-profile edits, and survives being copied between machines. (Power users can set a `VAULT` environment variable instead; the session skills check it first.)
+
+## Confirm
+
+Tell the user they are ready:
+
+```markdown
+## Knowledge vault ready
+- Location: <vault>
+- Recorded in: ~/.agent-vault
+- Folders: projects (one per repo), knowledge, sessions, evals
+- Templates: projects/_template/, sessions/_template.md, evals/_template.md
+- Next: run start-session in a project, then end-session when you finish.
 ```
 
 ## Notes
 
-- The leading underscore on `_README.md` and `_template.md` keeps `start-session` from mistaking them for project notes.
+- The leading underscore on `_README.md` and `_template*` keeps `start-session` from mistaking them for real project folders or notes.
 - Keep the default `~/vault` unless you have a reason not to; it means zero configuration.
-- Want the notes to sync or back up? Put the vault inside OneDrive, iCloud, Dropbox, or a private git repo, and point it there in step 1.
+- Want the notes to sync or back up? Put the vault inside OneDrive, iCloud, Dropbox, or a private git repo, and point it there.

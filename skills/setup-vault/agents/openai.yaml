@@ -1,4 +1,4 @@
 interface:
-  display_name: "Setup Vault"
-  short_description: "Create the markdown vault folder the session skills use."
+  display_name: "Setup Knowledge Vault"
+  short_description: "Create the markdown knowledge-vault folder the session skills use."
   default_prompt: "Set up my knowledge vault so start-session and end-session have somewhere to read and write."
