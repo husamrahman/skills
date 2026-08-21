@@ -22,6 +22,7 @@ templates/                     -> copied into <vault>/
       README.md
   knowledge/
     _README.md
+    _template.md               the cross-project knowledge-note template
   sessions/
     _README.md
     _template.md               the session-log template (end-session fills this)

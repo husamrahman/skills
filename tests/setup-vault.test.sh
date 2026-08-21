@@ -16,8 +16,13 @@ assert_ok "SKILL.md ships a runnable bash block" -- test -s "$BLOCK"
 TPL="$SKILLS_DIR/setup-vault/templates"
 assert_dir  "$TPL"                              "skill ships a templates/ folder"
 assert_file "$TPL/projects/_template/README.md" "project-note template exists in repo"
+assert_file "$TPL/knowledge/_template.md"       "knowledge-note template exists in repo"
 assert_file "$TPL/sessions/_template.md"        "session template exists in repo"
 assert_file "$TPL/evals/_template.md"           "eval template exists in repo"
+# the richer templates carry their signature sections
+assert_contains "$TPL/projects/_template/README.md" "## Learning log"    "project template has a Learning log"
+assert_contains "$TPL/knowledge/_template.md"        "## Anti-patterns"  "knowledge template has Anti-patterns"
+assert_contains "$TPL/evals/_template.md"            "## Eval criteria"  "eval template has Eval criteria"
 
 # Run it exactly as a user on a bare machine would; SKILL_DIR points at the skill.
 ( cd "$HOME" && SKILL_DIR="$SKILLS_DIR/setup-vault" bash "$BLOCK" ) >/dev/null 2>&1

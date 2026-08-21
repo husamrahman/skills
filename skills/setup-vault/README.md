@@ -15,6 +15,7 @@ Works on **Windows (PowerShell)** as well as macOS/Linux/WSL/Git Bash - the skil
       README.md        the project note
   knowledge/          cross-project lessons and gotchas
     _README.md
+    _template.md       the knowledge-note template
   sessions/           a log per work session (end-session writes these)
     _README.md
     _template.md       the session-log template

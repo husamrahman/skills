@@ -100,22 +100,28 @@ category: <gotcha | pattern | correction | tool-discovery | architecture>
 severity: <low | medium | high>
 ---
 
-# <short title of the learning>
+# <short, specific title of the learning>
 
 ## Scenario
 <the task, and what was attempted>
 
-## Expected
+## Expected behavior
 <what should have happened / the correct approach>
 
-## Actual
+## Actual behavior
 <what actually happened: the wrong approach, the error, the friction>
+
+## Resolution
+<how it was fixed / what the right answer turned out to be>
 
 ## Eval criteria
 <a binary, observable check that proves a future session learned this>
 
 ## Applies to
 <project-specific or global? when should a future session watch for this?>
+
+## Related
+- [[<linked-note>]] - <the durable lesson or knowledge note this maps to>
 ```
 
 Rules: keep each eval atomic (one lesson, one binary criterion). If nothing durable was learned, promote nothing - the inline section is enough.
