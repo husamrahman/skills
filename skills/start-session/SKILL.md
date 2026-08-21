@@ -5,17 +5,17 @@ description: Start a fresh session in an isolated worktree, loading context from
 
 # Start Session
 
-Start a new Claude Code (or Codex) session in a fresh, up-to-date git worktree, with the context you already earned loaded first: the project's note, its known gotchas, and the last handoff.
+Start a new session in a fresh, up-to-date git worktree, with the context you already earned loaded first: the project's note, its known gotchas, and the last handoff. It reads a plain folder of markdown files - no database, no index, no extra tools required.
 
-## Setup
+## Find the vault
 
-Point the skill at your notes. A vault is any folder of markdown files; an Obsidian vault works well. The paths below follow an Obsidian-style layout (`01-projects/`, `07-logs/sessions/`); adjust them to your own.
+Resolve the vault path in this order, and stop at the first that exists:
 
-```bash
-export VAULT="${VAULT:-$HOME/vault}"
-```
+1. The `VAULT` environment variable, if set and non-empty.
+2. The pointer file `~/.agent-vault` (written by `setup-vault`) - read the absolute path from its first non-empty line.
+3. The default `~/vault`.
 
-Context loading uses `qmd` (hybrid keyword + semantic search with relevance scores) when installed, and falls back to `ripgrep`.
+Resolve `~`/home yourself so this works on Windows, macOS, and Linux. If none of these resolve to a real folder, tell the user to run `setup-vault` first, then continue without vault context.
 
 ## Process
 
@@ -38,52 +38,48 @@ Rename the branch to a descriptive `feature/`, `fix/`, or `chore/` name at commi
 
 ### 2. Change to the worktree
 
-`cd` into `$WORKTREE`. Do all work here, not in the main checkout.
+`cd` into the new worktree. Do all work here, not in the main checkout. Note the project name (`PROJECT` above) - you will use it to find the right notes.
 
 ### 3. Load context
 
 Keep startup context minimal. Your project's config (CLAUDE.md / AGENTS.md) already covers conventions and architecture, so do not re-read those.
 
-```bash
-PROJECT_DIR=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
-```
-
 #### Read the project note (the only required read)
 
-```bash
-find "$VAULT/01-projects/" -maxdepth 2 -name "*.md" ! -name "_*" ! -name "README*" 2>/dev/null | grep -i "$PROJECT_DIR" | head -1
-```
-
-Read the full note: status, active work, gotchas, architecture.
-
-#### Quick vault check (2 queries max)
-
-**a) Project gotchas (keyword, fast)**
+Look in the vault's `projects/` folder for a note whose name matches the project, and read it in full - status, active work, gotchas, architecture.
 
 ```bash
-qmd search "gotcha $PROJECT_DIR" --json 2>/dev/null
-# fallback: rg -i -l "gotcha" "$VAULT" | grep -i "$PROJECT_DIR" | head -3
+# ripgrep/grep is handy but optional; your own file-search tools work just as well
+ls "$VAULT/projects/" | grep -i "$PROJECT"
 ```
 
-Read results scoring > 0.5. Skip the rest.
+If nothing matches, that is fine - it is a new project. Note it and move on.
 
-**b) Last handoff (only if continuing prior work)**
+#### Surface prior gotchas and the last handoff
 
-```bash
-qmd query "$PROJECT_DIR handoff next steps" --json 2>/dev/null
-```
+Search the vault for anything relevant to this project and task, then read only what actually applies. Use ripgrep if it is installed; otherwise use your own built-in file search (grep/glob) over the vault folder - both work with no extra install, which matters on a fresh Windows machine.
 
-Read the top result only if it scores > 0.4. Skip entirely for fresh tasks.
+Two quick searches are enough at startup:
 
-Rules: read the full doc (`qmd get`) for hits > 0.5, skip anything below, and read at most 3 docs at startup. Be selective.
+- **Gotchas for this project** - search `knowledge/` and the project note for the project name plus "gotcha".
+  ```bash
+  # if ripgrep is available:
+  rg -l -i "gotcha" "$VAULT" | grep -i "$PROJECT" | head -3
+  ```
+- **Last handoff** - only if you are continuing prior work: find the most recent note mentioning this project and read its "Handoff" / "Next steps" sections. Session notes are named `<project>-<YYYY-MM-DD>-<HHMMSS>.md`, so the newest one sorts last by name - no need for time-based `ls` flags that differ across shells.
+  ```bash
+  ls "$VAULT/sessions/" | grep -i "$PROJECT" | sort | tail -1
+  ```
+
+Read at most ~3 notes at startup. Be selective: skim titles and summaries, open the full note only when it is clearly relevant.
 
 #### During the session
 
-Defer deeper searches to when you actually need them:
+Defer deeper searches to when you actually need them - search the vault the same way (ripgrep or your file tools):
 
-- Before implementing something complex: `qmd query "how does X work in $PROJECT_DIR"`
-- On an unexpected error: `qmd search "gotcha [specific thing]"`
-- When making an architecture decision: `qmd query "$PROJECT_DIR architecture decision X"`
+- Before implementing something complex: look for how that area worked before.
+- On an unexpected error: search for a matching gotcha.
+- When making an architecture decision: search for the prior decision and its reasoning.
 
 ### 4. Present a ready summary
 
@@ -96,10 +92,11 @@ Defer deeper searches to when you actually need them:
 - Last handoff: <one line, or fresh start>
 ```
 
-You are in an isolated worktree with the vault's context loaded. When done, commit and push, then run `end-session` to log the session and capture learnings.
+You are in an isolated worktree with the vault's context loaded. When done, commit and push, then run `end-session` to log the session and capture what you learned.
 
 ## Notes
 
 - No prompts. Create the session and get to work.
+- No index to build or maintain - the vault is plain files, searched directly.
 - Always work in the worktree, not the main repo.
 - Pick the branch type at commit time from what the change turned out to be.

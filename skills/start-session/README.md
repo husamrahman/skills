@@ -6,13 +6,9 @@ It is the read half of a knowledge loop. [end-session](../end-session) is the wr
 
 ## Setup
 
-Point it at your notes (any folder of markdown, an Obsidian vault is ideal):
+Nothing to configure if you ran [setup-vault](../setup-vault) first - `start-session` finds your vault through the `~/.agent-vault` pointer file it wrote. Haven't run it yet? Do that once.
 
-```bash
-export VAULT="${VAULT:-$HOME/vault}"
-```
-
-Optional: install a search tool over the vault. The skill uses `qmd` (hybrid keyword + semantic) when present and falls back to `ripgrep`.
+The vault is just a folder of markdown files. `start-session` searches it directly - no index, no database, and no extra tools to install. It uses ripgrep if you happen to have it, and otherwise falls back to the agent's own built-in file search, so it works on a bare machine (including a fresh Windows box).
 
 ## Install
 
@@ -40,9 +36,9 @@ Or say "start a session on the checkout bug."
 
 ## What happens
 
-1. Figures out the project and task.
+1. Finds your vault (via `~/.agent-vault`, a `VAULT` env var, or the `~/vault` default) and figures out the project and task.
 2. Reads the project's note in full (status, active work, known gotchas, architecture).
-3. Runs up to two scored vault searches (gotchas, last handoff) and reads only the high-relevance hits, capping at about three docs.
+3. Runs two quick vault searches (gotchas, last handoff) and reads only the high-relevance hits, capping at about three notes.
 4. Surfaces the handful that actually apply, in a few bullets, then defers deeper searches to when you hit them.
 5. Opens a branch and worktree so the work ships via PR, and prints a short ready summary.
 

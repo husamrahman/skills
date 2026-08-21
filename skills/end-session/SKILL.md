@@ -1,19 +1,21 @@
 ---
 name: end-session
-description: End a session - write a structured session log to your markdown vault, extract non-obvious learnings as evals with testable criteria, promote reusable gotchas, clean up processes, and ship the work as a PR. Use when the user says end-session, /end-session, "wrap up", "ship it", or is done with a task.
+description: End a session - write a structured session log to your markdown vault (summary, changes, decisions, gotchas, lessons learned, next steps, handoff), promote reusable gotchas and lessons, clean up processes, and ship the work as a PR. Use when the user says end-session, /end-session, "wrap up", "ship it", or is done with a task.
 ---
 
 # End Session
 
-End a session cleanly: log what happened to your vault, extract learnings as evals a future session can check itself against, clean up anything running, and ship the work as a pull request.
+End a session cleanly: log what happened to your vault in clear, named sections, promote the gotchas and lessons a future session should know, clean up anything running, and ship the work as a pull request. The vault is a plain folder of markdown files - no database or index involved.
 
-## Setup
+## Find the vault
 
-The paths below follow an Obsidian-style vault (`07-logs/sessions/`, `07-logs/evals/`, `01-projects/`, `03-knowledge/`); adjust to your own layout.
+Resolve the vault path in this order, stopping at the first that exists:
 
-```bash
-export VAULT="${VAULT:-$HOME/vault}"
-```
+1. The `VAULT` environment variable, if set and non-empty.
+2. The pointer file `~/.agent-vault` (written by `setup-vault`) - the absolute path is its first non-empty line.
+3. The default `~/vault`.
+
+Resolve `~`/home yourself so this works on Windows, macOS, and Linux. If none exist, tell the user to run `setup-vault` and still finish shipping the work.
 
 ## Process
 
@@ -35,17 +37,17 @@ Stop dev servers, watchers, and containers you started from this worktree. Do no
 
 ```bash
 SESSION_DIR="$(pwd)"
-pkill -f "$SESSION_DIR.*vite"     2>/dev/null || true
-pkill -f "$SESSION_DIR.*next"     2>/dev/null || true
+pkill -f "$SESSION_DIR.*vite"      2>/dev/null || true
+pkill -f "$SESSION_DIR.*next"      2>/dev/null || true
 pkill -f "$SESSION_DIR.*tsx watch" 2>/dev/null || true
-pkill -f "$SESSION_DIR.*nodemon"  2>/dev/null || true
+pkill -f "$SESSION_DIR.*nodemon"   2>/dev/null || true
 # containers brought up from this dir
 [ -f "$SESSION_DIR/docker-compose.yml" ] && (cd "$SESSION_DIR" && docker compose down 2>/dev/null || true)
 ```
 
 ### 4. Write the session log
 
-Save to `$VAULT/07-logs/sessions/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. Facts, not narrative. Only list files that matter. Use `[[backlinks]]` to connect to the project note if your vault uses them.
+Save to `<vault>/sessions/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. Facts, not narrative. Only list files that matter. Fill in every section you have something for; drop a section entirely if it is genuinely empty rather than padding it.
 
 ```markdown
 ---
@@ -57,7 +59,7 @@ outcome: <shipped | pr-created | ongoing | discarded>
 
 # <project> - <one-line summary of what was done>
 
-## What happened
+## Session summary
 <2-3 sentences: the goal and what was accomplished>
 
 ## Changes
@@ -66,73 +68,34 @@ outcome: <shipped | pr-created | ongoing | discarded>
 ## Decisions
 - <choice made and why, not the alternative>
 
+## Gotchas
+- <something that bit you and how to avoid it next time. Trigger: when this applies.>
+
+## Lessons learned
+- <a non-obvious thing worth repeating or avoiding next time.
+  How you'll know: a concrete check that proves the lesson stuck.>
+
 ## Next steps
 - [ ] <what comes next>
 
-## PR
-<link if created, or "No PR">
-
 ## Handoff
-<anything the next session needs to know immediately>
+<anything the next session needs to know immediately to pick this up>
 ```
 
-### 5. Extract learnings as evals
+Figure out the Gotchas and Lessons yourself - do not ask the user. Review the session for problems that took several attempts, approaches that failed first, non-obvious behavior, patterns worth repeating, and corrections the user made. Only write down the non-obvious ones; if a routine session taught nothing new, leave those sections empty rather than forcing them. For each lesson, the "How you'll know" line is the point - make it a concrete, checkable statement, not a vibe.
 
-Figure out the learnings yourself; do not ask the user. Review the session for problems that took several attempts, approaches that failed first, non-obvious gotchas, patterns worth repeating, and corrections the user made.
+### 5. Promote the reusable ones
 
-For each one worth keeping, write an eval to `$VAULT/07-logs/evals/<project>-<YYYY-MM-DD>-<HHMMSS>.md`:
+So a future `start-session` resurfaces them:
 
-```markdown
----
-project: <project>
-date: <YYYY-MM-DD>
-category: <gotcha | pattern | correction | tool-discovery | architecture>
-severity: <low | medium | high>
----
+- **Project-specific** gotcha or lesson -> append to the project note in `<vault>/projects/<project>.md`:
+  ```markdown
+  ### Gotchas
+  - [DATE] **<issue>**: <what happened and the fix>. _Trigger: <when this applies>_
+  ```
+- **Global** (tooling, workflow, cross-project) -> add it under `<vault>/knowledge/` instead.
 
-# <short title of the learning>
-
-## Scenario
-<the task, and what was attempted>
-
-## Expected behavior
-<what should have happened / the correct approach>
-
-## Actual behavior
-<what actually happened: the wrong approach, the error, the friction>
-
-## Resolution
-<how it was fixed / what the right answer turned out to be>
-
-## Eval criteria
-<a concrete, testable check that a future session has learned this>
-
-## Applies to
-<project-specific or global? when should a future session watch for this?>
-```
-
-Rules: only write evals for non-obvious things. If nothing was learned, write nothing; do not force it. The "Eval criteria" line is the point, so make it a testable statement, not a vibe.
-
-### 6. Update project knowledge
-
-If a learning is project-specific, append it to the project note in `$VAULT/01-projects/`:
-
-```markdown
-### Gotchas
-- [DATE] **<issue>**: <what happened and the fix>. _Trigger: <when this applies>_
-```
-
-If it is global (tooling, workflow, cross-project), add it under `$VAULT/03-knowledge/` instead.
-
-### 7. Re-index (optional)
-
-If your vault has a search index, refresh it so the new notes are findable next session.
-
-```bash
-qmd update && qmd embed 2>/dev/null || true   # incremental; skip if you do not use qmd
-```
-
-### 8. Handle the worktree
+### 6. Handle the worktree
 
 The user should commit and push BEFORE this step to keep the work. Once the PR is up (or the work is pushed), retire the worktree:
 
@@ -140,14 +103,15 @@ The user should commit and push BEFORE this step to keep the work. Once the PR i
 git worktree remove "$(pwd)"   # run from, or pass, the worktree path; then cd back to the main repo
 ```
 
-### 9. Confirm completion
+### 7. Confirm completion
 
 ```markdown
 ## Session ended
 - Project: <name>
-- Session log: $VAULT/07-logs/sessions/<filename>
-- Evals written: <N> (<titles>) | None (routine session)
+- Session log: <vault>/sessions/<filename>
+- Promoted: <N gotchas/lessons into project note or knowledge, or "nothing new">
 - Cleanup: done
+- PR: <link, or "none">
 ```
 
 ## Shipping the work (when the user asks to commit and push)

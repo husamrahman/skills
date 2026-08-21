@@ -8,17 +8,17 @@ Skills here are tool-neutral. Every skill ships a `SKILL.md` (the workflow the a
 
 ## The idea: a knowledge loop
 
-`start-session` and `end-session` are a pair. Every session ends by writing its learnings (gotchas, decisions, what got done) into a markdown knowledge vault, and every session starts by reading the relevant ones back. Your agent stops repeating the mistakes it already made once.
+`start-session` and `end-session` are a pair. Every session ends by writing its learnings (a summary, gotchas, lessons learned, decisions, what got done) into a markdown knowledge vault, and every session starts by reading the relevant ones back. Your agent stops repeating the mistakes it already made once.
 
-The vault is just a folder of `.md` files on your computer. New to this? Run `setup-vault` first and you have one in a second. No Obsidian, no database, no account.
+The vault is just a folder of `.md` files on your computer - searched directly, no database or index. New to this? Run `setup-vault` first and you have one in a second. No Obsidian, no account.
 
 ## Skills
 
 | Skill | What it does |
 |-------|--------------|
-| [setup-vault](skills/setup-vault) | Create the markdown vault folder the session skills read and write. Run this once first. No Obsidian required. |
-| [start-session](skills/start-session) | Read the project note and run scored vault searches for gotchas and the last handoff, surface what applies, then open an isolated git worktree. |
-| [end-session](skills/end-session) | Log the session, extract non-obvious learnings as evals with testable criteria, promote reusable gotchas, then commit, push, and open a PR. |
+| [setup-vault](skills/setup-vault) | Create the markdown vault folder the session skills read and write, and record where it lives so they can find it on any OS. Run this once first. No Obsidian required. |
+| [start-session](skills/start-session) | Read the project note and search your vault for gotchas and the last handoff, surface what applies, then open an isolated git worktree. |
+| [end-session](skills/end-session) | Log the session in clear sections (summary, changes, decisions, gotchas, lessons learned, next steps, handoff), promote reusable gotchas and lessons, then commit, push, and open a PR. |
 
 ## Quickstart
 
@@ -53,6 +53,16 @@ cp -r skills/start-session ~/.codex/skills/
 ```
 
 Codex reads `SKILL.md` for the workflow and `agents/openai.yaml` for how to surface it.
+
+## Where's the vault, and how do the skills find it?
+
+`setup-vault` creates the vault (default `~/vault`) and writes its absolute path into a one-line pointer file, `~/.agent-vault`. `start-session` and `end-session` resolve the vault in this order:
+
+1. A `VAULT` environment variable, if you set one.
+2. The `~/.agent-vault` pointer file.
+3. The `~/vault` default.
+
+A plain pointer file is used on purpose instead of an environment variable or a symlink: it works identically on Windows, macOS, and Linux, needs no admin rights or shell-profile edits, and survives being copied between machines.
 
 ## How a skill is structured
 
