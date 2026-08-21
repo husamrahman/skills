@@ -75,6 +75,16 @@ skills/<name>/
 
 Same skill, two front doors: one file the agent reads, one adapter that makes it feel native in Codex.
 
+## Testing
+
+Every skill is verified in isolation by a dependency-free harness (`bash` + `git`, nothing to install). Each suite runs in a throwaway `HOME` and git repo and asserts the skill's real side effects; a structural lint covers every skill automatically.
+
+```bash
+bash tests/run.sh
+```
+
+Adding a skill? See [tests/README.md](tests/README.md) for the one-file recipe. CI runs this on every push and PR.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Use them, fork them, make them yours.
