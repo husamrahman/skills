@@ -31,6 +31,8 @@ Create this structure. Only create files that do not already exist — never ove
     _README.md
   sessions/          one log per work session (end-session writes these)
     _README.md
+  evals/             one note per eval - a lesson with a testable criterion
+    _README.md
 ```
 
 Seed each file with this content:
@@ -45,6 +47,7 @@ long-term memory. Nothing here is special - open any file in any text editor.
 - projects/    one note per project (status, how it works, gotchas)
 - knowledge/   lessons that apply across every project
 - sessions/    a dated log for each work session
+- evals/       one note per eval: a learning plus a testable check
 
 start-session reads from these folders; end-session writes to them.
 Optional: open this folder in Obsidian (https://obsidian.md) to browse and link
@@ -99,8 +102,16 @@ on any project.
 # Session logs
 
 end-session writes one dated note here per work session: a summary, what changed,
-decisions, gotchas, lessons learned, next steps, and a handoff. You do not write
-these by hand.
+decisions, gotchas, evals, next steps, and a handoff. You do not write these by hand.
+```
+
+`<vault>/evals/_README.md`
+```markdown
+# Evals
+
+end-session writes one note here per non-obvious learning, each with a testable
+"Eval criteria" line. start-session surfaces the relevant ones before a task, so
+the same mistake does not happen twice. You do not write these by hand.
 ```
 
 ### 3. Record where the vault lives (so the session skills can find it)
@@ -123,7 +134,7 @@ List the layout and tell the user they are ready:
 ## Vault ready
 - Location: <vault>
 - Recorded in: ~/.agent-vault
-- Folders: projects, knowledge, sessions
+- Folders: projects, knowledge, sessions, evals
 - Next: run start-session in a project, then end-session when you finish.
   The vault fills itself in from there.
 ```
@@ -135,7 +146,7 @@ On macOS, Linux, WSL, or Git Bash you can do steps 2-3 in one shell block instea
 ```bash
 set -e
 VAULT="${VAULT:-$HOME/vault}"
-mkdir -p "$VAULT/projects" "$VAULT/knowledge" "$VAULT/sessions"
+mkdir -p "$VAULT/projects" "$VAULT/knowledge" "$VAULT/sessions" "$VAULT/evals"
 seed() { [ -e "$1" ] || cat > "$1"; }
 
 seed "$VAULT/README.md" <<'EOF'
@@ -144,6 +155,7 @@ A plain folder of markdown files my coding agent uses as long-term memory.
 - projects/  one note per project
 - knowledge/ cross-project lessons and gotchas
 - sessions/  a dated log per work session
+- evals/     one note per learning, each with a testable check
 EOF
 seed "$VAULT/projects/_README.md" <<'EOF'
 # Projects
@@ -169,6 +181,11 @@ EOF
 seed "$VAULT/sessions/_README.md" <<'EOF'
 # Session logs
 end-session writes one dated note per session. You do not write these by hand.
+EOF
+seed "$VAULT/evals/_README.md" <<'EOF'
+# Evals
+end-session writes one note per non-obvious learning, each with a testable
+"Eval criteria" line. start-session surfaces the relevant ones next time.
 EOF
 
 printf '%s\n' "$VAULT" > "$HOME/.agent-vault"

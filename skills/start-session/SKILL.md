@@ -59,12 +59,12 @@ If nothing matches, that is fine - it is a new project. Note it and move on.
 
 Search the vault for anything relevant to this project and task, then read only what actually applies. Use ripgrep if it is installed; otherwise use your own built-in file search (grep/glob) over the vault folder - both work with no extra install, which matters on a fresh Windows machine.
 
-Two quick searches are enough at startup:
+A few quick searches are enough at startup:
 
-- **Gotchas for this project** - search `knowledge/` and the project note for the project name plus "gotcha".
+- **Gotchas and evals for this project** - search `knowledge/`, `evals/`, and the project note for the project name plus "gotcha", and skim the "Eval criteria" lines of any matching evals.
   ```bash
   # if ripgrep is available:
-  rg -l -i "gotcha" "$VAULT" | grep -i "$PROJECT" | head -3
+  rg -l -i "gotcha|eval criteria" "$VAULT" | grep -i "$PROJECT" | head -3
   ```
 - **Last handoff** - only if you are continuing prior work: find the most recent note mentioning this project and read its "Handoff" / "Next steps" sections. Session notes are named `<project>-<YYYY-MM-DD>-<HHMMSS>.md`, so the newest one sorts last by name - no need for time-based `ls` flags that differ across shells.
   ```bash
@@ -88,7 +88,7 @@ Defer deeper searches to when you actually need them - search the vault the same
 - Project: <project>     Branch: <branch>     Worktree: <path>
 - Previous context: <1-2 sentences from the last session log, or "fresh start">
 - Project note: <loaded | not found>
-- Gotchas: <count, or none found>
+- Gotchas / evals: <count, or none found>
 - Last handoff: <one line, or fresh start>
 ```
 

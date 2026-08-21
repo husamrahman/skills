@@ -38,7 +38,7 @@ Or say "start a session on the checkout bug."
 
 1. Finds your vault (via `~/.agent-vault`, a `VAULT` env var, or the `~/vault` default) and figures out the project and task.
 2. Reads the project's note in full (status, active work, known gotchas, architecture).
-3. Runs two quick vault searches (gotchas, last handoff) and reads only the high-relevance hits, capping at about three notes.
+3. Runs a couple of quick vault searches (gotchas + evals, last handoff) and reads only the high-relevance hits, capping at about three notes.
 4. Surfaces the handful that actually apply, in a few bullets, then defers deeper searches to when you hit them.
 5. Opens a branch and worktree so the work ships via PR, and prints a short ready summary.
 

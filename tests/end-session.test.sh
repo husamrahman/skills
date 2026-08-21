@@ -11,9 +11,12 @@ SKILL="$SKILLS_DIR/end-session/SKILL.md"
 # The documented session-note template must contain every promised section.
 for section in \
   "## Session summary" "## Changes" "## Decisions" \
-  "## Gotchas" "## Lessons learned" "## Next steps" "## Handoff"; do
+  "## Gotchas" "## Evals" "## Next steps" "## Handoff"; do
   assert_contains "$SKILL" "$section" "template defines section: ${section#\#\# }"
 done
+# evals are real artifacts: a standalone eval note with a testable criterion
+assert_contains "$SKILL" "evals/<project>" "promotes evals into the evals/ folder"
+assert_contains "$SKILL" "Eval criteria"   "eval note carries a testable Eval criteria line"
 # and it must no longer reference the retired concepts
 assert_not_contains "$SKILL" "qmd" "no qmd re-index step remains"
 assert_not_contains "$SKILL" "07-logs" "no legacy folder scheme remains"

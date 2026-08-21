@@ -14,6 +14,8 @@ Create the vault your session skills use as memory, and record where it lives so
     _README.md
   sessions/           a log per work session (end-session writes these)
     _README.md
+  evals/              one note per learning, each with a testable check
+    _README.md
 ```
 
 It also writes a one-line pointer file, `~/.agent-vault`, containing the vault's absolute path. That is how `start-session` and `end-session` find the vault later - so it just works on Windows, macOS, and Linux with no environment variables to set and no symlinks to create.

@@ -1,11 +1,11 @@
 ---
 name: end-session
-description: End a session - write a structured session log to your markdown vault (summary, changes, decisions, gotchas, lessons learned, next steps, handoff), promote reusable gotchas and lessons, clean up processes, and ship the work as a PR. Use when the user says end-session, /end-session, "wrap up", "ship it", or is done with a task.
+description: End a session - write a structured session log to your markdown vault (summary, changes, decisions, gotchas, evals, next steps, handoff), turn non-obvious learnings into evals with testable criteria, promote reusable gotchas, clean up processes, and ship the work as a PR. Use when the user says end-session, /end-session, "wrap up", "ship it", or is done with a task.
 ---
 
 # End Session
 
-End a session cleanly: log what happened to your vault in clear, named sections, promote the gotchas and lessons a future session should know, clean up anything running, and ship the work as a pull request. The vault is a plain folder of markdown files - no database or index involved.
+End a session cleanly: log what happened to your vault in clear, named sections, turn what you learned into evals a future session can check itself against, clean up anything running, and ship the work as a pull request. The vault is a plain folder of markdown files - no database or index involved.
 
 ## Find the vault
 
@@ -71,9 +71,9 @@ outcome: <shipped | pr-created | ongoing | discarded>
 ## Gotchas
 - <something that bit you and how to avoid it next time. Trigger: when this applies.>
 
-## Lessons learned
-- <a non-obvious thing worth repeating or avoiding next time.
-  How you'll know: a concrete check that proves the lesson stuck.>
+## Evals
+- <the learning in one line. Eval criteria: a concrete, testable check that
+  proves a future session has internalized it.>
 
 ## Next steps
 - [ ] <what comes next>
@@ -82,20 +82,55 @@ outcome: <shipped | pr-created | ongoing | discarded>
 <anything the next session needs to know immediately to pick this up>
 ```
 
-Figure out the Gotchas and Lessons yourself - do not ask the user. Review the session for problems that took several attempts, approaches that failed first, non-obvious behavior, patterns worth repeating, and corrections the user made. Only write down the non-obvious ones; if a routine session taught nothing new, leave those sections empty rather than forcing them. For each lesson, the "How you'll know" line is the point - make it a concrete, checkable statement, not a vibe.
+Figure out the Gotchas and Evals yourself - do not ask the user. Review the session for problems that took several attempts, approaches that failed first, non-obvious behavior, patterns worth repeating, and corrections the user made. Only capture the non-obvious ones; if a routine session taught nothing new, leave those sections empty rather than forcing them. For each eval, the "Eval criteria" line is the point - make it a concrete, testable statement, not a vibe.
 
-### 5. Promote the reusable ones
+### 5. Promote each eval to its own note
+
+For every non-obvious learning worth keeping, write a standalone eval to `<vault>/evals/<project>-<YYYY-MM-DD>-<HHMMSS>.md`. This is the durable artifact a future `start-session` surfaces before the same mistake can recur.
+
+```markdown
+---
+project: <project>
+date: <YYYY-MM-DD>
+category: <gotcha | pattern | correction | tool-discovery | architecture>
+severity: <low | medium | high>
+---
+
+# <short title of the learning>
+
+## Scenario
+<the task, and what was attempted>
+
+## Expected
+<what should have happened / the correct approach>
+
+## Actual
+<what actually happened: the wrong approach, the error, the friction>
+
+## Resolution
+<how it was fixed / what the right answer turned out to be>
+
+## Eval criteria
+<a concrete, testable check that a future session has learned this>
+
+## Applies to
+<project-specific or global? when should a future session watch for this?>
+```
+
+Rules: only write evals for non-obvious things. If nothing was learned, write nothing; do not force it. The "Eval criteria" line is a testable statement, not a summary.
+
+### 6. Promote reusable gotchas
 
 So a future `start-session` resurfaces them:
 
-- **Project-specific** gotcha or lesson -> append to the project note in `<vault>/projects/<project>.md`:
+- **Project-specific** gotcha -> append to the project note in `<vault>/projects/<project>.md`:
   ```markdown
   ### Gotchas
   - [DATE] **<issue>**: <what happened and the fix>. _Trigger: <when this applies>_
   ```
 - **Global** (tooling, workflow, cross-project) -> add it under `<vault>/knowledge/` instead.
 
-### 6. Handle the worktree
+### 7. Handle the worktree
 
 The user should commit and push BEFORE this step to keep the work. Once the PR is up (or the work is pushed), retire the worktree:
 
@@ -103,13 +138,14 @@ The user should commit and push BEFORE this step to keep the work. Once the PR i
 git worktree remove "$(pwd)"   # run from, or pass, the worktree path; then cd back to the main repo
 ```
 
-### 7. Confirm completion
+### 8. Confirm completion
 
 ```markdown
 ## Session ended
 - Project: <name>
 - Session log: <vault>/sessions/<filename>
-- Promoted: <N gotchas/lessons into project note or knowledge, or "nothing new">
+- Evals written: <N> (<titles>) | None (routine session)
+- Gotchas promoted: <N into project note or knowledge, or "none">
 - Cleanup: done
 - PR: <link, or "none">
 ```

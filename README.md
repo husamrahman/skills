@@ -8,7 +8,7 @@ Skills here are tool-neutral. Every skill ships a `SKILL.md` (the workflow the a
 
 ## The idea: a knowledge loop
 
-`start-session` and `end-session` are a pair. Every session ends by writing its learnings (a summary, gotchas, lessons learned, decisions, what got done) into a markdown knowledge vault, and every session starts by reading the relevant ones back. Your agent stops repeating the mistakes it already made once.
+`start-session` and `end-session` are a pair. Every session ends by writing its learnings (a summary, gotchas, evals with testable criteria, decisions, what got done) into a markdown knowledge vault, and every session starts by reading the relevant ones back. Your agent stops repeating the mistakes it already made once.
 
 The vault is just a folder of `.md` files on your computer - searched directly, no database or index. New to this? Run `setup-vault` first and you have one in a second. No Obsidian, no account.
 
@@ -17,8 +17,8 @@ The vault is just a folder of `.md` files on your computer - searched directly, 
 | Skill | What it does |
 |-------|--------------|
 | [setup-vault](skills/setup-vault) | Create the markdown vault folder the session skills read and write, and record where it lives so they can find it on any OS. Run this once first. No Obsidian required. |
-| [start-session](skills/start-session) | Read the project note and search your vault for gotchas and the last handoff, surface what applies, then open an isolated git worktree. |
-| [end-session](skills/end-session) | Log the session in clear sections (summary, changes, decisions, gotchas, lessons learned, next steps, handoff), promote reusable gotchas and lessons, then commit, push, and open a PR. |
+| [start-session](skills/start-session) | Read the project note and search your vault for gotchas, evals, and the last handoff, surface what applies, then open an isolated git worktree. |
+| [end-session](skills/end-session) | Log the session in clear sections (summary, changes, decisions, gotchas, evals, next steps, handoff), turn learnings into evals with testable criteria, promote reusable gotchas, then commit, push, and open a PR. |
 
 ## Quickstart
 
