@@ -75,7 +75,7 @@ A plain pointer file is used on purpose instead of an environment variable or a 
   evals/        durable learnings with a testable check   (template: evals/_template.md)
 ```
 
-The templates live in the vault, so they are easy to find and edit. `end-session` fills in `sessions/_template.md` and `evals/_template.md`; `start-session` only reads (its one template is the ready-summary it prints).
+The starter templates are real files that ship in `skills/setup-vault/templates/` (open them to review or edit). `setup-vault` copies that folder into your vault; `end-session` then fills in `sessions/_template.md` and `evals/_template.md`; `start-session` only reads (its one template is the ready-summary it prints).
 
 ## How a skill is structured
 

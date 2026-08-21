@@ -23,7 +23,9 @@ Works on **Windows (PowerShell)** as well as macOS/Linux/WSL/Git Bash - the skil
     _template.md       the eval-note template
 ```
 
-Each project gets its **own folder** (named after the repo); its note is that folder's `README.md`. The `sessions/` and `evals/` templates live in the vault so they are easy to find and edit.
+Each project gets its **own folder** (named after the repo); its note is that folder's `README.md`.
+
+The starter files come from this skill's own **`templates/` folder** (`skills/setup-vault/templates/`), which mirrors the layout above. Setup just copies that folder into your vault, skipping anything you already have - so the templates are real files you can review and edit in one place, and `start-session` / `end-session` refer to the copies in your vault.
 
 It also writes a one-line pointer file, `~/.agent-vault`, containing the vault's absolute path. That is how `start-session` and `end-session` find the vault later - so it just works on Windows, macOS, and Linux with no environment variables to set and no symlinks to create.
 
