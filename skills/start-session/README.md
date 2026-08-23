@@ -1,6 +1,6 @@
 # start-session
 
-Start a work session already knowing what you learned last time. Before any code, this skill searches your markdown knowledge vault for prior gotchas, patterns, and decisions tied to the project and task, surfaces them, then opens an isolated git worktree to work in.
+Start a work session already knowing what you learned last time. Before any code, this skill searches your markdown knowledge vault for prior gotchas, patterns, and decisions tied to the project and task, and surfaces them. If you are a developer working in git and want to, it can also open an isolated worktree - but that step is optional, so it works just as well in the desktop app, in a chat, or on a folder of documents.
 
 It is the read half of a knowledge loop. [end-session](../end-session) is the write half.
 
@@ -40,7 +40,7 @@ Or say "start a session on the checkout bug."
 2. Reads the project's note in full (status, active work, known gotchas, architecture).
 3. Runs a couple of quick vault searches (gotchas + evals, last handoff) and reads only the high-relevance hits, capping at about three notes.
 4. Surfaces the handful that actually apply, in a few bullets, then defers deeper searches to when you hit them.
-5. Opens a branch and worktree so the work ships via PR, and prints a short ready summary.
+5. Prints a short ready summary. If you are in a git repo and want isolation, it can open a branch and worktree so the work ships via a PR - optional, and skipped otherwise.
 
 ## Example
 
