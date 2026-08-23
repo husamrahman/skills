@@ -1,46 +1,25 @@
-# Skills
+# Skills I Use
 
-This is my personal collection of skills—the ones I use in my own agent workflows. I’ll keep adding to and refining the collection as those workflows evolve.
+My personal collection of agent skills, pulled directly from my own workflows.
 
-I often share videos about what I’m building and how I use these skills on [YouTube](https://www.youtube.com/@husamrahman77).
+These are the skills I use in practice. I’ll keep adding to them and refining them as my workflows evolve. Take what helps, adapt it, and make it your own.
 
-You can also connect with me on [LinkedIn](https://www.linkedin.com/in/husam-rahman).
-
-## Skill catalog
-
-### Capturing session knowledge
-
-- [setup-vault](skills/setup-vault) — Create the markdown vault used to keep project context, session notes, and reusable learnings.
-- [start-session](skills/start-session) — Begin a task with the most relevant context, gotchas, and handoff from previous sessions.
-- [end-session](skills/end-session) — Wrap up a task by recording what changed, preserving useful learnings, and shipping the work through a pull request.
+I share videos about what I’m building and how I use these skills on [YouTube](https://www.youtube.com/@husamrahman77). You can also connect with me on [LinkedIn](https://www.linkedin.com/in/husam-rahman).
 
 ## Installation
 
-Clone the repository first:
+Use the skills installer and choose the skills you want to add to Claude Code or Codex:
 
 ```bash
-git clone https://github.com/husamrahman/skills.git
-cd skills
+npx skills@latest add husamrahman/skills
 ```
 
-### Claude Code
+## Reference
 
-Install every skill for your user:
+### Capturing session knowledge
 
-```bash
-mkdir -p ~/.claude/skills
-cp -r skills/* ~/.claude/skills/
-```
+Skills for carrying useful context and lessons from one agent session into the next.
 
-To install them for only one project, copy the skill folders into that project’s `.claude/skills/` directory instead.
-
-### Codex
-
-```bash
-mkdir -p ~/.codex/skills
-cp -r skills/* ~/.codex/skills/
-```
-
-### Other agents
-
-Each skill is self-contained in its own folder and includes a `SKILL.md` file. For other skill-compatible agents, copy the folders you want from `skills/` into the directory where your agent loads skills.
+- [setup-vault](skills/setup-vault): Create the markdown vault used to keep project context, session notes, and reusable learnings.
+- [start-session](skills/start-session): Begin a task with the most relevant context, gotchas, and handoff from previous sessions.
+- [end-session](skills/end-session): Wrap up a task by recording what changed, preserving useful learnings, and shipping the work through a pull request.
