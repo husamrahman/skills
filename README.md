@@ -1,24 +1,26 @@
-# Skills I Use
+# Skills for Claude Code and Codex
 
-My personal collection of agent skills, pulled directly from my own workflows.
+My agent skills that I use in my own workflows.
 
-These are the skills I use in practice. I’ll keep adding to them and refining them as my workflows evolve. Take what helps, adapt it, and make it your own.
+These skills are practical, focused, and built from the way I actually work. I’ll keep adding to them and refining them as my workflows evolve. Use what helps. Adapt it. Make it your own.
 
-I share videos about what I’m building and how I use these skills on [YouTube](https://www.youtube.com/@husamrahman77). You can also connect with me on [LinkedIn](https://www.linkedin.com/in/husam-rahman).
+If you want to keep up with new skills and changes to existing ones, follow along on [YouTube](https://www.youtube.com/@husamrahman77). You can also connect with me on [LinkedIn](https://www.linkedin.com/in/husam-rahman).
 
-## Installation
+## Installation (30-second setup)
 
-Use the skills installer and choose the skills you want to add to Claude Code or Codex:
+Run the skills installer:
 
 ```bash
 npx skills@latest add husamrahman/skills
 ```
 
+Pick the skills you want, then choose Claude Code or Codex as the target.
+
 ## Reference
 
 ### Capturing session knowledge
 
-Skills for carrying useful context and lessons from one agent session into the next.
+Carry useful context and lessons from one agent session into the next.
 
 - [setup-vault](skills/setup-vault): Create the markdown vault used to keep project context, session notes, and reusable learnings.
 - [start-session](skills/start-session): Begin a task with the most relevant context, gotchas, and handoff from previous sessions.
