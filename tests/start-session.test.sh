@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Contract: start-session finds the vault, reads the project note, surfaces a
-# gotcha and the latest handoff, and opens an isolated worktree on a new branch
-# without touching main. All offline, in a sandbox.
+# Contract: start-session finds the vault, reads the project note, and surfaces
+# a gotcha and the latest handoff - all without git. The worktree is an optional
+# developer step; when used, it lands on a new branch without touching main.
+# All offline, in a sandbox.
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 echo "start-session"
 make_sandbox
@@ -38,7 +39,7 @@ assert_ok "finds a project gotcha via plain grep" -- test "$hits" -ge 1
 latest="$(printf '%s\n' "$VAULT"/sessions/*"$PROJECT"*.md | tr ' ' '\n' | sort | tail -1)"
 assert_contains "$latest" "NEW handoff" "name-sort selects the newest session note"
 
-# --- worktree isolation ---
+# --- optional worktree isolation (developer path) ---
 REPO="$SANDBOX/acme-api"
 new_repo "$REPO"
 STAMP="20260821-120000"

@@ -17,7 +17,7 @@ The vault is just a folder of `.md` files on your computer - searched directly, 
 | Skill | What it does |
 |-------|--------------|
 | [setup-vault](skills/setup-vault) | Create the markdown vault folder the session skills read and write, and record where it lives so they can find it on any OS. Run this once first. No Obsidian required. |
-| [start-session](skills/start-session) | Read the project note and search your vault for gotchas, evals, and the last handoff, surface what applies, then open an isolated git worktree. |
+| [start-session](skills/start-session) | Read the project note and search your vault for gotchas, evals, and the last handoff, and surface what applies. Optionally opens an isolated git worktree for developers who want it - skipped in the desktop app, in chats, or outside git. |
 | [end-session](skills/end-session) | Log the session in clear sections (summary, changes, decisions, gotchas, evals, next steps, handoff), turn learnings into evals with testable criteria, promote reusable gotchas, then commit, push, and open a PR. |
 
 ## Quickstart

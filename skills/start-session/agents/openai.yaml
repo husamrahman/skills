@@ -1,4 +1,4 @@
 interface:
   display_name: "Start Session"
-  short_description: "Pull prior learnings from your vault, then open a worktree."
-  default_prompt: "Start a session: search my vault for relevant learnings on this task, then open a worktree."
+  short_description: "Pull prior learnings from your vault, then get to work (git worktree optional)."
+  default_prompt: "Start a session: search my vault for relevant learnings on this task, then get to work. Only if this is a git repo and I want isolation, open a worktree - otherwise skip it."
